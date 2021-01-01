@@ -15,8 +15,8 @@ app.config['MYSQL_HOST'] = db['mysql_host']
 app.config['MYSQL_USER'] = db['mysql_user']
 app.config['MYSQL_PASSWORD'] = db['mysql_password']
 app.config['MYSQL_DB'] = db['mysql_db']
+app.config['CURSOR_CLASS'] = DictCursor
 app.config['SECRET_KEY'] = urandom(24)
-app.config['CURSORCLASS'] = DictCursor
 
 @app.after_request
 def add_headers(response):
@@ -31,25 +31,35 @@ def index():
 @app.route('/get')
 def get():
     cur = mysql.connection.cursor()
-    query_res = cur.execute("SELECT * FROM keeps;")
-    if query_res > 0:
-        query_num = cur.fetchall()
-        return str(query_num)
+    q = cur.execute("SELECT * FROM keeps;")
+    if q > 0:
+        keeps = cur.fetchall()
+        result = []
+        for keep in keeps:
+            result.append({
+                'id'        : keep[0],
+                'title'     : keep[1],
+                'body'      : keep[2],
+                'important' : keep[3]
+            })
+            print(keep)
+            print('--------------------')
+        return jsonify({'response': 'success', 'message': 'Keeps Loaded Successfully', 'keeps': result})
     else:
-        return "None"
+        return jsonify({'response' : 'error', 'message': "No Database Entries Found", 'keeps': int(q)})
 
 @app.route('/new', methods=['POST'])
 def post():
     if request.method == 'POST':
         result = request.json
-        title = result['title']
-        body = result['body']
-        date_time = result['date_time']
+        title = str(result['title'])
+        body = str(result['body'])
+        important = bool(result['important'])
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO keeps(heading, body, date_time) VALUES(%s, %s, %s);", (title, body, date_time))
+        cur.execute("INSERT INTO keeps(title, body, important) VALUES(%s, %s, %b);", (title, body, important))
         mysql.connection.commit()
         cur.close()
-    return redirect('/')
+    return jsonify({'status': 'OK', 'message': 'Posted Successfully'})
 
 @app.route('/delete', methods=['POST'])
 def delete():

@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
     var data: object = {
       'title' : 'Sent Thru Angular',
       'body' : 'This Post is sent from the angular client using HTTP Client Module and Flask API',
-      'date_time' : '2020-12-31 15:44:02'
+      'important' : true
     }
     this.data.postData(data).subscribe(
       res => {

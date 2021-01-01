@@ -11,7 +11,7 @@ export class GetdataService {
   constructor(private http : HttpClient) { }
 
   getData(){
-    return this.http.get(this.serverURL)
+    return this.http.get(`${this.serverURL}/get`)
   }
   
   postData(data:any){
