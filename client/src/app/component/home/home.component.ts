@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { Observable } from 'rxjs';
 import { GetdataService } from 'src/app/services/getdata.service';
 
 @Component({
@@ -18,23 +16,23 @@ export class HomeComponent implements OnInit {
   getData(){
     this.data.getData().subscribe(
       res => {
-        this.keeps = Object.assign(res, this.keeps);
-        console.log(this.keeps);
+        this.keeps = res;
+        console.log(res);
       }
     );
   }
   postData(){
     var data: object = {
-      'title' : 'Sent Thru Angular',
-      'body' : 'This Post is sent from the angular client using HTTP Client Module and Flask API',
-      'important' : true
+      'title' : 'Sent Thru Angular Test 2',
+      'body' : 'This Post is ALSO sent from the angular client using HTTP Client Module and Flask API, but after reframing the API Request',
+      'important' : false
     }
     this.data.postData(data).subscribe(
       res => {
         console.log(res);
+        this.getData();
       }
     );
-    this.getData()
   }
 
 }

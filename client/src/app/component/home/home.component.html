@@ -1,3 +1,8 @@
 <p>home works!</p>
 <h1>Send Post Request</h1>
 <button (click)="postData()">Send Message</button>
+<div *ngFor="let keep of keeps['keeps']">
+    <h1>{{keep['id']}}. {{keep['title']}}</h1>
+    <h3>{{keep['body']}}</h3>
+    <h2>{{keep['important']}}</h2>
+</div>
