@@ -24,7 +24,7 @@ def add_headers(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization, data')
     return response
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def get():
     cur = mysql.connection.cursor()
     query = cur.execute("SELECT * FROM keeps")
