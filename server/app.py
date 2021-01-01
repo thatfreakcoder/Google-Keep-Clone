@@ -25,23 +25,18 @@ def add_headers(response):
     return response
 
 @app.route('/', methods=['GET'])
+def index():
+    return "Google Keep Backend"
+
+@app.route('/get')
 def get():
     cur = mysql.connection.cursor()
-    query = cur.execute("SELECT * FROM keeps")
-    if query > 0:
-        u_query = cur.fetchall()
-        print(type(u_query))
-    #     new = {'status' : 'OK'}
-    #     for index, que in enumerate(u_query):
-    #         res = {}
-    #         res['id'] = que[0]
-    #         res['title'] = que[1]
-    #         res['body'] = que[2]
-    #         res['date_time'] = que[3]
-    #         new[] = res
-    #     cur.close()
-    cur.close()
-    return str(u_query)
+    query_res = cur.execute("SELECT * FROM keeps;")
+    if query_res > 0:
+        query_num = cur.fetchall()
+        return str(query_num)
+    else:
+        return "None"
 
 @app.route('/new', methods=['POST'])
 def post():
