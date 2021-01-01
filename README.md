@@ -7,9 +7,9 @@ A clone of the Google Keep App that everyone can take notes into. The notes will
 - Flask for Backend Server
 
 ### Client Stack [dev]
-- React for Client side rendering
+- Angular for Client side rendering
 
 # Future Work 🔮
 - Cloud Hosted MongoDB for DBMS
-- MERN Stack Implementation
+- MEAN Stack Implementation
 - Hosting
