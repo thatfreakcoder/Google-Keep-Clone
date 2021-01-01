@@ -1,5 +1,7 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, jsonify
 from flask_mysqldb import MySQL
+from MySQLdb.cursors import DictCursor
+from json import loads, dumps
 from os import urandom
 from datetime import datetime
 from yaml import load, FullLoader
@@ -14,6 +16,13 @@ app.config['MYSQL_USER'] = db['mysql_user']
 app.config['MYSQL_PASSWORD'] = db['mysql_password']
 app.config['MYSQL_DB'] = db['mysql_db']
 app.config['SECRET_KEY'] = urandom(24)
+app.config['CURSORCLASS'] = DictCursor
+
+@app.after_request
+def add_headers(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization, data')
+    return response
 
 @app.route('/', methods=['GET'])
 def get():
@@ -21,28 +30,30 @@ def get():
     query = cur.execute("SELECT * FROM keeps")
     if query > 0:
         u_query = cur.fetchall()
-        new = {}
-        for index, que in enumerate(u_query):
-            res = {}
-            res['id'] = que[0]
-            res['title'] = que[1]
-            res['body'] = que[2]
-            res['date_time'] = que[3]
-            new[int(index)] = res
-        cur.close()
+        print(type(u_query))
+    #     new = {'status' : 'OK'}
+    #     for index, que in enumerate(u_query):
+    #         res = {}
+    #         res['id'] = que[0]
+    #         res['title'] = que[1]
+    #         res['body'] = que[2]
+    #         res['date_time'] = que[3]
+    #         new[] = res
+    #     cur.close()
     cur.close()
-    return new
+    return str(u_query)
 
 @app.route('/new', methods=['POST'])
 def post():
-    result = request.json
-    title = result['title']
-    body = result['body']
-    date_time = result['date_time']
-    cur = mysql.connection.cursor()
-    cur.execute("INSERT INTO keeps(heading, body, date_time) VALUES(%s, %s, %s);", (title, body, date_time))
-    mysql.connection.commit()
-    cur.close()
+    if request.method == 'POST':
+        result = request.json
+        title = result['title']
+        body = result['body']
+        date_time = result['date_time']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO keeps(heading, body, date_time) VALUES(%s, %s, %s);", (title, body, date_time))
+        mysql.connection.commit()
+        cur.close()
     return redirect('/')
 
 @app.route('/delete', methods=['POST'])
