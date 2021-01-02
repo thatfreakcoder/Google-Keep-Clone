@@ -62,7 +62,7 @@ def post():
         important = bool(result['important'])
         color = str(result['color'])
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO keeps(title, body, important, color) VALUES({}, {}, {}, {});".format(title, body, important, color))
+        cur.execute("INSERT INTO keeps(title, body, important, color) VALUES(%s, %s, %b, %s);", (title, body, important, color))
         mysql.connection.commit()
         cur.close()
     return jsonify({
@@ -78,7 +78,8 @@ def post():
 
 @app.route('/delete', methods=['POST'])
 def delete():
-    id = request.args['id']
+    result = request.json
+    id = result['id']
     cur = mysql.connection.cursor()
     cur.execute('DELETE FROM keeps WHERE keep_id={};'.format(int(id)))
     mysql.connection.commit()
