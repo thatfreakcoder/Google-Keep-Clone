@@ -70,8 +70,8 @@ def post():
         'message'   : 'Posted Successfully', 
         'content'   : {
             'title'     : title,
-            'body'      : body,
             'important' : important,
+            'body'      : body,
             'color'     : color
             }
         })
@@ -86,7 +86,8 @@ def delete():
     cur.close()
     return jsonify({
         'response'  : 'success', 
-        'message'   : 'Deleted Successfully'
+        'message'   : 'Deleted Successfully',
+        'content'   : 'Deleted Note ID' + str(id)
         })
 
 @app.route('/edit', methods=['POST'])
