@@ -7,14 +7,19 @@ import { catchError, retry } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class GetdataService {
-  serverURL = "http://localhost:5000"
+  DEV_URL: string = "http://localhost:5000";
+  PROD_URL: string = "https://yuvrajdagur.pythonanywhere.com";
   constructor(private http : HttpClient) { }
 
-  getData(){
-    return this.http.get(`${this.serverURL}/get`)
+  getData(url:string){
+    return this.http.get(`${url}/get`)
   }
   
-  postData(data:any){
-    return this.http.post(`${this.serverURL}/new`, data)
+  postData(url:string, data:any){
+    return this.http.post(`${url}/new`, data)
+  }
+
+  deleteNote(url:string, data:any){
+    return this.http.post(`${url}/delete`, data)
   }
 }
