@@ -1,6 +1,5 @@
 from flask import Flask, request, redirect, jsonify
 from flask_mysqldb import MySQL
-from MySQLdb.cursors import DictCursor
 from json import loads, dumps
 from os import urandom
 from datetime import datetime
@@ -15,7 +14,6 @@ app.config['MYSQL_HOST'] = db['mysql_host']
 app.config['MYSQL_USER'] = db['mysql_user']
 app.config['MYSQL_PASSWORD'] = db['mysql_password']
 app.config['MYSQL_DB'] = db['mysql_db']
-app.config['CURSOR_CLASS'] = DictCursor
 app.config['SECRET_KEY'] = urandom(24)
 
 @app.after_request
@@ -26,7 +24,11 @@ def add_headers(response):
 
 @app.route('/', methods=['GET'])
 def index():
-    return "Google Keep Backend"
+    return jsonify({
+        'response'  : 'success', 
+        'message'   : 'Google Keep Clone Backend by Yuvraj Dagur', 
+        'routes'    : ['/get', '/new', '/delete', '/edit']
+        })
 
 @app.route('/get')
 def get():
@@ -40,11 +42,14 @@ def get():
                 'id'        : keep[0],
                 'title'     : keep[1],
                 'body'      : keep[2],
-                'important' : keep[3]
+                'important' : keep[3],
+                'color'     : keep[4]
             })
-            print(keep)
-            print('--------------------')
-        return jsonify({'response': 'success', 'message': 'Keeps Loaded Successfully', 'keeps': result})
+        return jsonify({
+            'response'  : 'success', 
+            'message'   : 'Keeps Loaded Successfully', 
+            'keeps'     : result
+            })
     else:
         return jsonify({'response' : 'error', 'message': "No Database Entries Found", 'keeps': int(q)})
 
@@ -55,21 +60,64 @@ def post():
         title = str(result['title'])
         body = str(result['body'])
         important = bool(result['important'])
+        color = str(result['color'])
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO keeps(title, body, important) VALUES(%s, %s, %b);", (title, body, important))
+        cur.execute("INSERT INTO keeps(title, body, important, color) VALUES({}, {}, {}, {});".format(title, body, important, color))
         mysql.connection.commit()
         cur.close()
-    return jsonify({'status': 'OK', 'message': 'Posted Successfully'})
+    return jsonify({
+        'response'  : 'success', 
+        'message'   : 'Posted Successfully', 
+        'content'   : {
+            'title'     : title,
+            'body'      : body,
+            'important' : important,
+            'color'     : color
+            }
+        })
 
 @app.route('/delete', methods=['POST'])
 def delete():
-    result = request.json
-    id = result['id']
+    id = request.args['id']
     cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM keeps WHERE id={};'.format(int(id)))
+    cur.execute('DELETE FROM keeps WHERE keep_id={};'.format(int(id)))
     mysql.connection.commit()
     cur.close()
-    return redirect('/')
+    return jsonify({
+        'response'  : 'success', 
+        'message'   : 'Deleted Successfully'
+        })
+
+@app.route('/edit', methods=['POST'])
+def edit():
+    result = request.json
+    id = int(result['id'])
+    title = str(result['title'])
+    body = str(result['body'])
+    important = bool(result['important'])
+    cur = mysql.connection.cursor()
+    cur.execute("UPDATE keeps SET title={}, body={}, important={} WHERE keep_id={};".format(title, body, important, id))
+    mysql.connection.commit()
+    cur.close()
+    return jsonify({
+        'response': 'success', 
+        'message': 'Entries Updated',
+        'content'   : {
+            'title'     : title,
+            'body'      : body,
+            'important' : important,
+            'color'     : color
+            }
+        })
+
+@app.errorhandler(404)
+def error(e):
+    return jsonify({
+        'response'  : 'failure', 
+        'error'     : '404', 
+        'message'   : str(e)
+        })
+
 
 if __name__ == '__main__':
     app.run(debug=True)
