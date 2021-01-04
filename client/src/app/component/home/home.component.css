@@ -1,0 +1,10 @@
+.response {
+    margin-top: 20px;
+}
+
+.card {
+    border: 2px solid;
+    background-color: #202124;
+    color: white;
+    border-radius: 0.7rem;
+}

@@ -8,13 +8,19 @@ import { GetdataService } from 'src/app/services/getdata.service';
 })
 export class HomeComponent implements OnInit {
   keeps: any = {};
+  colorVal: string;
   url: string = this.data.DEV_URL;
+
   constructor(private data : GetdataService) { }
 
   ngOnInit(): void {
     this.getData();
   }
 
+  getValue(val){
+    console.log(typeof val, val.length, val);
+    
+  }
   getData(){
     this.data.getData(this.url).subscribe(
       res => {

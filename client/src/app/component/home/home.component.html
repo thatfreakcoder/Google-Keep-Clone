@@ -1,16 +1,14 @@
-<h1>Send Post Request</h1>
-<button (click)="postData()">Send Message</button>
-<div class="row">
-    <div class="response col-lg-6 col-sm-12" *ngFor="let keep of keeps['keeps']">
-        <div class="card" style="background-color: {{keep['color']}};">
-            <div class="card-header">
-                <h1 class="text-center text-capitalize"> {{keep['title']}}</h1>
+<div class="row m-auto text-center">
+    <div class="response col-lg-4 col-sm-12" *ngFor="let keep of keeps['keeps']">
+        <div class="card" style="border-color: {{keep['color']}};box-shadow: 0 0 15px {{keep['color']}};">
+            <div class="card-header" style="border-color: {{keep['color']}};">
+                <h1 class="text-center text-capitalize "> {{keep['title']}}</h1>
             </div>
             <div class="card-body">
                 <h3>{{keep['body']}}</h3>
             </div>
             <div class="card-footer">
-                <button (click)="deleteData(keep['id'])">Delete Note</button>
+                <button class="btn btn-dark" (click)="deleteData(keep[ 'id'])">Delete Note</button>
             </div>
         </div>
     </div>
