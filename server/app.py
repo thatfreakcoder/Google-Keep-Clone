@@ -97,8 +97,9 @@ def edit():
     title = str(result['title'])
     body = str(result['body'])
     important = bool(result['important'])
+    color = str(result['color'])
     cur = mysql.connection.cursor()
-    cur.execute("UPDATE keeps SET title={}, body={}, important={} WHERE keep_id={};".format(title, body, important, id))
+    cur.execute("UPDATE keeps SET title={}, body={}, important={}, color={} WHERE keep_id={};".format(title, body, important, color, id))
     mysql.connection.commit()
     cur.close()
     return jsonify({
