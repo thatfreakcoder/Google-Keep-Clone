@@ -11,11 +11,30 @@ export class HomeComponent implements OnInit {
   colorVal: string;
   url: string = this.data.DEV_URL;
 
-  constructor(private data : GetdataService) { }
+  constructor(
+    private data : GetdataService,
+    // ngZone: NgZone 
+    ) { 
+      /* window['onSignIn'] = user => ngZone.run(
+        () => {
+          this.onSignIn(user);
+        }
+      );*/
+     }
 
   ngOnInit(): void {
     this.getData();
   }
+/*
+  onSignIn(googleUser){
+    // console.log(JSON.stringify(googleUser.getBasicProfile()));
+    this.name = googleUser.getBasicProfile()['Ad'];
+    this.email = googleUser.getBasicProfile()['cu'];
+    this.profile = googleUser.getBasicProfile()['SJ'];
+    console.log(this.name, this.profile, this.email);
+    
+  }
+*/ // Google Sign In Boilerplate Code
 
   getData(){
     this.data.getData(this.url).subscribe(
