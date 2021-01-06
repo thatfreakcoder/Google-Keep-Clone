@@ -2,13 +2,18 @@
     <div class="response col-lg-4 col-sm-12" *ngFor="let keep of keeps['keeps']">
         <div class="card" style="border-color: {{keep['color']}};box-shadow: 0 0 15px {{keep['color']}};">
             <div class="card-header" style="border-color: {{keep['color']}};">
-                <h1 class="text-center text-capitalize "> {{keep['title']}}</h1>
+                <h1 class="text-center text-capitalize"> {{keep['title']}}</h1>
             </div>
             <div class="card-body">
                 <h3>{{keep['body']}}</h3>
             </div>
             <div class="card-footer">
-                <button class="btn btn-dark" (click)="deleteData(keep[ 'id'])">Delete Note</button>
+                <button type="button" class="btn btn-outline-danger" (click)="deleteData(keep['id'])">
+                    Delete Note
+                  </button>
+                <button type="button" class="btn btn-danger" (click)="postData()">
+                    Post
+                  </button>
             </div>
         </div>
     </div>
