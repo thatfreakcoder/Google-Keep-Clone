@@ -10,7 +10,7 @@ import { GetdataService } from 'src/app/services/getdata.service';
 export class HomeComponent implements OnInit {
   keeps: any = {};
   colorVal: string;
-  url: string = this.data.DEV_URL;
+  url: string = this.data.PROD_URL;
   name: any;
   email: any;
   profile: any;
@@ -51,9 +51,11 @@ export class HomeComponent implements OnInit {
 
   postData(){
     var data: object = {
-      'title' : 'Test',
-      'body' : 'This Post is test input, but after reframing the API Request',
-      'important' : false,
+      'title' : 'Angular Client Post',
+      'body' : 'This Post is test input, producing directly from the hosted Production database.',
+      'important' : true,
+      'edited': false,
+      'date_time': new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
       'color': '#29f4ff'
     }
     this.data.postData(this.url, data).subscribe(

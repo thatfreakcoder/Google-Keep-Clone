@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export class GetdataService {
   DEV_URL: string = "http://localhost:5000";
-  PROD_URL: string = "https://yuvrajdagur.pythonanywhere.com";
+  PROD_URL: string = "https://appsbyyuvraj.pythonanywhere.com/keeps";
   constructor(private http : HttpClient) { }
 
   getData(url:string){
