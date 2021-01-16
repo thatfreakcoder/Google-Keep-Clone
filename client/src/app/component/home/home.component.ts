@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { GetdataService } from 'src/app/services/getdata.service';
 
@@ -10,31 +11,34 @@ export class HomeComponent implements OnInit {
   keeps: any = {};
   colorVal: string;
   url: string = this.data.DEV_URL;
+  name: any;
+  email: any;
+  profile: any;
 
   constructor(
     private data : GetdataService,
-    // ngZone: NgZone 
+    ngZone: NgZone 
     ) { 
-      /* window['onSignIn'] = user => ngZone.run(
+      window['onSignIn'] = user => ngZone.run(
         () => {
           this.onSignIn(user);
         }
-      );*/
+      );
      }
 
   ngOnInit(): void {
     this.getData();
   }
-/*
+
   onSignIn(googleUser){
-    // console.log(JSON.stringify(googleUser.getBasicProfile()));
+    console.log(JSON.stringify(googleUser.getBasicProfile()));
     this.name = googleUser.getBasicProfile()['Ad'];
     this.email = googleUser.getBasicProfile()['cu'];
     this.profile = googleUser.getBasicProfile()['SJ'];
     console.log(this.name, this.profile, this.email);
     
   }
-*/ // Google Sign In Boilerplate Code
+ // Google Sign In Boilerplate Code
 
   getData(){
     this.data.getData(this.url).subscribe(
@@ -47,10 +51,10 @@ export class HomeComponent implements OnInit {
 
   postData(){
     var data: object = {
-      'title' : 'Sent Thru Angular Test 2',
-      'body' : 'This Post is ALSO sent from the angular client using HTTP Client Module and Flask API, but after reframing the API Request',
+      'title' : 'Test',
+      'body' : 'This Post is test input, but after reframing the API Request',
       'important' : false,
-      'color': '#26ffb0'
+      'color': '#29f4ff'
     }
     this.data.postData(this.url, data).subscribe(
       res => {
