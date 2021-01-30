@@ -1,4 +1,3 @@
-import { NgZone } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { GetdataService } from 'src/app/services/getdata.service';
 
@@ -15,30 +14,11 @@ export class HomeComponent implements OnInit {
   email: any;
   profile: any;
 
-  constructor(
-    private data : GetdataService,
-    ngZone: NgZone 
-    ) { 
-      window['onSignIn'] = user => ngZone.run(
-        () => {
-          this.onSignIn(user);
-        }
-      );
-     }
+  constructor( private data : GetdataService ) {}
 
   ngOnInit(): void {
     this.getData();
   }
-
-  onSignIn(googleUser){
-    console.log(JSON.stringify(googleUser.getBasicProfile()));
-    this.name = googleUser.getBasicProfile()['Ad'];
-    this.email = googleUser.getBasicProfile()['cu'];
-    this.profile = googleUser.getBasicProfile()['SJ'];
-    console.log(this.name, this.profile, this.email);
-    
-  }
- // Google Sign In Boilerplate Code
 
   getData(){
     this.data.getData(this.url).subscribe(
@@ -50,12 +30,19 @@ export class HomeComponent implements OnInit {
   }
 
   postData(){
+    var d = new Date()
+    var date = `${
+      d.getFullYear().toString().padStart(4, '0')}-${
+        (d.getMonth()+1).toString().padStart(2, '0')}-${
+          d.getDate().toString().padStart(2, '0')} ${
+            d.getHours().toString().padStart(2, '0')}:${
+              d.getMinutes().toString().padStart(2, '0')}:${
+                d.getSeconds().toString().padStart(2, '0')}`
     var data: object = {
       'title' : 'Angular Client Post',
       'body' : 'This Post is test input, producing directly from the hosted Production database.',
       'important' : true,
-      'edited': false,
-      'date_time': new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''),
+      'date_time': date,
       'color': '#29f4ff'
     }
     this.data.postData(this.url, data).subscribe(
