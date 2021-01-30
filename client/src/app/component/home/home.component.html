@@ -1,7 +1,17 @@
 <div class="row m-auto text-center">
     <div class="response col-lg-4 col-sm-8" *ngFor="let keep of keeps['keeps']">
-        <div class="card" style="border-color: {{keep['color']}};box-shadow: 0 0 15px {{keep['color']}};">
+        <div class="card" matRipple style="border-color: {{keep['color']}};box-shadow: 0 0 15px {{keep['color']}};">
             <div class="card-header" style="border-color: {{keep['color']}};">
+                <div *ngIf="keep['important']==1">
+                    <mat-chip-list>
+                        <mat-chip color="primary" selected>Important</mat-chip>
+                    </mat-chip-list>
+                </div>
+                <div *ngIf="keep['edited']==1">
+                    <mat-chip-list>
+                        <mat-chip color="accent" selected>Edited</mat-chip>
+                    </mat-chip-list>
+                </div>
                 <h1 class="text-center text-capitalize"> {{keep['title']}}</h1>
             </div>
             <div class="card-body">
@@ -9,10 +19,10 @@
             </div>
             <div class="card-footer">
                 <h5>{{keep['date_time'].toString().slice(0, -4)}}</h5>
-                <button type="button" class="btn btn-outline-danger" (click)="deleteData(keep['id'])">
+                <button mat-raised-button color="warn" (click)="deleteData(keep['id'])">
                     Delete Note
                   </button>
-                <button type="button" class="btn btn-danger" (click)="postData()">
+                <button mat-raised-button color="accent" (click)="postData()">
                     Post
                 </button>
             </div>

@@ -8,6 +8,10 @@ import { HomeComponent } from './component/home/home.component';
 import { GetdataService } from "./services/getdata.service";
 import { NewComponent } from './component/new/new.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatButtonModule} from '@angular/material/button';
+import {MatRippleModule} from '@angular/material/core';
+import {MatChipsModule} from '@angular/material/chips';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +23,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatRippleModule,
+    MatChipsModule
   ],
   providers: [GetdataService],
   bootstrap: [AppComponent]
