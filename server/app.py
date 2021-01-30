@@ -1,14 +1,15 @@
-from flask import Flask, request, redirect, jsonify
+#!/usr/bin/python3.6
+
+from flask import Flask, request, jsonify
 from flask_mysqldb import MySQL
 from os import urandom
-from datetime import datetime
 from yaml import load, FullLoader
 
 app = Flask(__name__)
 mysql = MySQL(app)
 
 # MySQL Configuration
-db_keeps = load(open('db_keeps.yaml'), Loader=FullLoader)
+db_keeps = load(open('keeps_db.yaml'), Loader=FullLoader)
 app.config['MYSQL_HOST'] = db_keeps['mysql_host']
 app.config['MYSQL_USER'] = db_keeps['mysql_user']
 app.config['MYSQL_PASSWORD'] = db_keeps['mysql_password']
@@ -34,15 +35,15 @@ def index():
 @app.route('/keeps', methods=['GET'])
 def keeps():
     return jsonify({
-        'response'  : 'success', 
-        'message'   : 'Google Keep Clone Backend by Yuvraj Dagur', 
+        'response'  : 'success',
+        'message'   : 'Google Keep Clone Backend by Yuvraj Dagur',
         'routes'    : ['/get', '/new', '/delete', '/edit']
         })
 
 @app.route('/keeps/get')
 def get():
     cur = mysql.connection.cursor()
-    q = cur.execute("SELECT * FROM keeps;")
+    q = cur.execute("SELECT * FROM keeps ORDER BY keep_id DESC;")
     if q > 0:
         keeps = cur.fetchall()
         result = []
@@ -57,8 +58,8 @@ def get():
                 'edited'    : keep[6]
             })
         return jsonify({
-            'response'  : 'success', 
-            'message'   : 'Keeps Loaded Successfully', 
+            'response'  : 'success',
+            'message'   : 'Keeps Loaded Successfully',
             'keeps'     : result
             })
     else:
@@ -72,22 +73,22 @@ def post():
         body = str(result['body'])
         important = bool(result['important'])
         color = str(result['color'])
-        date_time = str(result['date_time'])
+        date_time = str(result["date_time"])
         edited = 0
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO keeps(title, body, date_time, color, important, edited) VALUES(%s, %s, %s, %s, %b, %b);", (title, body, date_time, color, important, edited))
         mysql.connection.commit()
         cur.close()
         return jsonify({
-            'response'  : 'success', 
-            'message'   : 'Posted Successfully', 
+            'response'  : 'success',
+            'message'   : 'Posted Successfully',
             'content'   : {
                 'title'     : title,
                 'important' : important,
                 'body'      : body,
                 'color'     : color,
                 'important' : important,
-                'edited'    : edited
+                'edited'    : bool(edited)
                 }
         })
     else:
@@ -105,7 +106,7 @@ def delete():
     mysql.connection.commit()
     cur.close()
     return jsonify({
-        'response'  : 'success', 
+        'response'  : 'success',
         'message'   : 'Deleted Successfully',
         'content'   : 'Deleted Note ID' + str(id)
         })
@@ -123,7 +124,7 @@ def edit():
     mysql.connection.commit()
     cur.close()
     return jsonify({
-        'response': 'success', 
+        'response': 'success',
         'message': 'Entries Updated',
         'content'   : {
             'title'     : title,
@@ -136,11 +137,10 @@ def edit():
 @app.errorhandler(404)
 def error(e):
     return jsonify({
-        'response'  : 'failure', 
-        'error'     : '404', 
+        'response'  : 'failure',
+        'error'     : '404',
         'message'   : str(e)
         })
-
 
 if __name__ == '__main__':
     app.run(debug=True)
