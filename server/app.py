@@ -111,27 +111,36 @@ def delete():
         'content'   : 'Deleted Note ID' + str(id)
         })
 
-@app.route('/keeps/edit', methods=['POST'])
+@app.route('/keeps/edit', methods=['POST', 'GET'])
 def edit():
-    result = request.json
-    id = int(result['id'])
-    title = str(result['title'])
-    body = str(result['body'])
-    important = bool(result['important'])
-    color = str(result['color'])
-    cur = mysql.connection.cursor()
-    cur.execute("UPDATE keeps SET title={}, body={}, important={}, color={} WHERE keep_id={};".format(title, body, important, color, id))
-    mysql.connection.commit()
-    cur.close()
-    return jsonify({
-        'response': 'success',
-        'message': 'Entries Updated',
-        'content'   : {
-            'title'     : title,
-            'body'      : body,
-            'important' : important,
-            'color'     : color
-            }
+    if request.method == 'POST':
+        result = request.json
+        id = int(result['id'])
+        title = str(result['title'])
+        body = str(result['body'])
+        important = bool(result['important'])
+        color = str(result['color'])
+        edited = 1
+        cur = mysql.connection.cursor()
+        cur.execute("UPDATE keeps SET title=%s, body=%s, important=%s, color=%s, edited=%s WHERE keep_id=%s;", (title, body, important, color, edited, id))
+        mysql.connection.commit()
+        cur.close()
+        return jsonify({
+            'response': 'success',
+            'message': 'Entries Updated',
+            'content'   : {
+                'id'        : id,
+                'title'     : title,
+                'body'      : body,
+                'important' : important,
+                'color'     : color,
+                'edited'    : edited
+                }
+            })
+    else:
+        return jsonify({
+            'response': 'success',
+            'message': 'Create a POST Request on this route with the data packet containing {id, title, body, important, color, edited}'
         })
 
 @app.errorhandler(404)
