@@ -8,3 +8,15 @@
     color: white;
     border-radius: 1.7rem;
 }
+
+.card-header {
+    padding-bottom: 0;
+}
+
+.datetime {
+    color: grey;
+}
+
+.mat-standard-chip {
+    min-height: 20px;
+}

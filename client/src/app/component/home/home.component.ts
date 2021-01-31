@@ -10,14 +10,20 @@ export class HomeComponent implements OnInit {
   keeps: any = {};
   colorVal: string;
   url: string = this.data.PROD_URL;
-  name: any;
-  email: any;
-  profile: any;
 
   constructor( private data : GetdataService ) {}
 
   ngOnInit(): void {
-    this.getData();
+    this.getData()
+  }
+  calculateDate(){
+    var curr_date = new Date();
+    var curr_day = curr_date.getTime().toLocaleString();
+    var post_date = new Date(this.keeps['keeps'][0]['date_time']);
+    var post_day = post_date.getTime().toLocaleString();
+    // var difference_in_days = (curr_day - post_day) / (1000 * 3600 * 24);
+    
+    console.log(curr_date, post_date);
   }
 
   getData(){

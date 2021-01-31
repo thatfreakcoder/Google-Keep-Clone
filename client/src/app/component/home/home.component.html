@@ -1,29 +1,29 @@
-<div class="row m-auto text-center">
+<div class="row m-auto">
     <div class="response col-lg-4 col-sm-8" *ngFor="let keep of keeps['keeps']">
         <div class="card" matRipple style="border-color: {{keep['color']}};box-shadow: 0 0 15px {{keep['color']}};">
             <div class="card-header" style="border-color: {{keep['color']}};">
-                <div *ngIf="keep['important']==1">
+                <h1 class="text-center text-capitalize"> {{keep['title']}}</h1>
+                <div class="chip float-left" *ngIf="keep['important']==1">
                     <mat-chip-list>
                         <mat-chip color="primary" selected>Important</mat-chip>
                     </mat-chip-list>
                 </div>
-                <div *ngIf="keep['edited']==1">
+                <div class="chip float-left" *ngIf="keep['edited']==1">
                     <mat-chip-list>
                         <mat-chip color="accent" selected>Edited</mat-chip>
                     </mat-chip-list>
                 </div>
-                <h1 class="text-center text-capitalize"> {{keep['title']}}</h1>
+                <h5 class="datetime float-right">Posted on: <br><b>{{keep['date_time'].toString().slice(0, -13)}}</b></h5>
             </div>
             <div class="card-body">
                 <h3>{{keep['body']}}</h3>
             </div>
-            <div class="card-footer">
-                <h5>{{keep['date_time'].toString().slice(0, -4)}}</h5>
+            <div class="card-footer text-right">
                 <button mat-raised-button color="warn" (click)="deleteData(keep['id'])">
-                    Delete Note
+                    Delete
                   </button>
-                <button mat-raised-button color="accent" (click)="postData()">
-                    Post
+                <button mat-raised-button color="accent" (click)="calculateDate()">
+                    Edit
                 </button>
             </div>
         </div>
