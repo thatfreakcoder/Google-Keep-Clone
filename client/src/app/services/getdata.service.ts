@@ -20,4 +20,8 @@ export class GetdataService {
   deleteNote(url:string, data:any){
     return this.http.post(`${url}/delete`, data)
   }
+
+  editNote(url: string, data: any){
+    return this.http.post(`${url}/edit`, data)
+  }
 }

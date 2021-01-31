@@ -1,0 +1,16 @@
+<div class="text-center">
+    <mat-form-field appearance="standard">
+        <mat-label>Title</mat-label>
+        <input required matInput value="{{data.title}}">
+    </mat-form-field>
+    <mat-dialog-content>
+        <mat-form-field appearance="fill">
+            <mat-label>Body</mat-label>
+            <textarea matInput mat-dialog-title>{{data.body}}</textarea>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-raised-button mat-dialog-close mat-dialog-close="{{data.title}}" color="warn">Discard</button>
+        <button mat-raised-button mat-dialog-close mat-dialog-close="refresh" color="primary">Confirm</button>
+    </mat-dialog-actions>
+</div>

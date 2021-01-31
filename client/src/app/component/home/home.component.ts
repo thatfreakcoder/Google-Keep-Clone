@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GetdataService } from 'src/app/services/getdata.service';
+import {MatDialog} from '@angular/material/dialog';
+import { EditNoteComponent } from '../edit-note/edit-note.component';
 
 @Component({
   selector: 'app-home',
@@ -9,25 +11,35 @@ import { GetdataService } from 'src/app/services/getdata.service';
 export class HomeComponent implements OnInit {
   keeps: any = {};
   colorVal: string;
-  url: string = this.data.PROD_URL;
+  url: string = this.service.PROD_URL;
 
-  constructor( private data : GetdataService ) {}
+  constructor( private service : GetdataService, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.getData()
   }
-  calculateDate(){
-    var curr_date = new Date();
-    var curr_day = curr_date.getTime().toLocaleString();
-    var post_date = new Date(this.keeps['keeps'][0]['date_time']);
-    var post_day = post_date.getTime().toLocaleString();
-    // var difference_in_days = (curr_day - post_day) / (1000 * 3600 * 24);
-    
-    console.log(curr_date, post_date);
+
+  openDialog(id){
+    let dialogRef = this.dialog.open(EditNoteComponent, {data: {
+                                                              title: this.keeps['keeps'][id]['title'],
+                                                              body: this.keeps['keeps'][id]['body'],
+                                                              color: this.keeps['keeps'][id]['color'],
+                                                              important: this.keeps['keeps'][id]['important']
+                                                                    }, 
+                                                          minHeight: '50%', minWidth: '70%',hasBackdrop: true});
+
+    dialogRef.afterClosed().subscribe(
+      result => {
+        console.log(`Dialog Result : ${result}`);
+        if (result === 'refresh') {
+          this.getData();
+        }
+      }
+    )
   }
 
   getData(){
-    this.data.getData(this.url).subscribe(
+    this.service.getData(this.url).subscribe(
       res => {
         this.keeps = res;
         console.log(res);
@@ -51,7 +63,7 @@ export class HomeComponent implements OnInit {
       'date_time': date,
       'color': '#29f4ff'
     }
-    this.data.postData(this.url, data).subscribe(
+    this.service.postData(this.url, data).subscribe(
       res => {
         console.log(res);
         this.getData();
@@ -64,7 +76,7 @@ export class HomeComponent implements OnInit {
       'id': id
     };
     console.log(data);
-    this.data.deleteNote(this.url, data).subscribe(
+    this.service.deleteNote(this.url, data).subscribe(
       res => {
         console.log(res);
         this.getData()

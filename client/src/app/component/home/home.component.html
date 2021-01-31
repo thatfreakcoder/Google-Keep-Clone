@@ -1,5 +1,5 @@
 <div class="row m-auto">
-    <div class="response col-lg-4 col-sm-8" *ngFor="let keep of keeps['keeps']">
+    <div class="response col-lg-4 col-sm-8" *ngFor="let keep of keeps['keeps']; let ind = index">
         <div class="card" matRipple style="border-color: {{keep['color']}};box-shadow: 0 0 15px {{keep['color']}};">
             <div class="card-header" style="border-color: {{keep['color']}};">
                 <h1 class="text-center text-capitalize"> {{keep['title']}}</h1>
@@ -19,12 +19,12 @@
                 <h3>{{keep['body']}}</h3>
             </div>
             <div class="card-footer text-right">
+                <button mat-raised-button color="accent" (click)="openDialog(ind)">
+                    Edit
+                </button>
                 <button mat-raised-button color="warn" (click)="deleteData(keep['id'])">
                     Delete
                   </button>
-                <button mat-raised-button color="accent" (click)="calculateDate()">
-                    Edit
-                </button>
             </div>
         </div>
     </div>
